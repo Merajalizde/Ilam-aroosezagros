@@ -20,6 +20,7 @@
       <a href="#news">اخبار</a>
       <a href="#services">خدمات</a>
       <a href="#survey">نظرسنجی</a>
+      <a href="#contact">تماس با ما</a>
     </div>
   </nav>
 
