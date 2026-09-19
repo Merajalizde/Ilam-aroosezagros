@@ -1,19 +1,10 @@
-// ==========================================
-// ایلام زیبا - اتصال به Supabase
-// ==========================================
-
 const SUPABASE_URL =
   "https://wxtxbhdqlyhkrwvacrhq.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_Ymb2QRMx8OkadUGyZoSifQ_l1-TTvW4";
+  "sb_publishable_Ymb2QRMx8OkadUGyZoSifQ_l1-TTvV4";
 
 let supabaseClient = null;
-
-
-// ==========================================
-// بارگذاری کتابخانه Supabase
-// ==========================================
 
 const supabaseScript = document.createElement("script");
 
@@ -31,16 +22,15 @@ supabaseScript.onload = function () {
 };
 
 supabaseScript.onerror = function () {
-
   console.error("❌ Supabase library failed to load");
 };
 
 document.head.appendChild(supabaseScript);
 
 
-// ==========================================
-// فرم تماس با ما
-// ==========================================
+// ===============================
+// فرم تماس
+// ===============================
 
 const contactForm = document.getElementById("contactForm");
 
@@ -53,13 +43,10 @@ if (contactForm) {
     const msg = document.getElementById("contactMsg");
 
     if (!supabaseClient) {
-
       msg.textContent =
-        "⏳ اتصال به سرور هنوز آماده نیست. چند ثانیه صبر کنید و دوباره امتحان کنید.";
-
+        "⏳ لطفاً چند لحظه صبر کنید و دوباره امتحان کنید.";
       return;
     }
-
 
     const formData = new FormData(contactForm);
 
@@ -67,60 +54,48 @@ if (contactForm) {
     const email = formData.get("email");
     const message = formData.get("message");
 
-
     if (!name || !message) {
-
       msg.textContent =
         "⚠️ لطفاً نام و پیام را وارد کنید.";
-
       return;
     }
 
-
-    msg.textContent = "⏳ در حال ارسال پیام...";
-
+    msg.textContent = "⏳ در حال ارسال...";
 
     try {
 
       const { error } = await supabaseClient
-  .from("Contact")
-  .insert([
-    {
-      name: name,
-      email: email || null,
-      message: message
-    }
-  ]);
-
+        .from("Contact")
+        .insert([
+          {
+            name: name,
+            email: email || null,
+            message: message
+          }
+        ]);
 
       if (error) {
 
         console.error("Supabase Error:", error);
 
         msg.textContent =
-          "❌ خطای Supabase: " +
-          error.message;
+          "❌ خطای Supabase: " + error.message;
 
         return;
       }
-
-
-      console.log("Message saved:", data);
 
       msg.textContent =
         "✅ پیام شما با موفقیت ارسال شد.";
 
       contactForm.reset();
 
-    } catch (err) {
+    } catch (error) {
 
-      console.error("Unexpected Error:", err);
+      console.error("Unexpected Error:", error);
 
       msg.textContent =
-        "❌ خطای غیرمنتظره: " +
-        err.message;
+        "❌ خطای غیرمنتظره: " + error.message;
     }
 
   });
-
 }
