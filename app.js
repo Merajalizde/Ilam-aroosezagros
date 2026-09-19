@@ -1,44 +1,46 @@
-// ===============================
-// ILAM BEAUTIFUL - SUPABASE
-// ===============================
+// ==========================================
+// ایلام زیبا - اتصال به Supabase
+// ==========================================
 
-const SUPABASE_URL = "https://wxtxbhdqlyhkrwvacrhq.supabase.co";
+const SUPABASE_URL =
+  "https://wxtxbhdqlyhkrwvacrhq.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_Ymb2QRMx8OkadUGyZoSifQ_l1-TTvV4";
+  "sb_publishable_Ymb2QRMx8OkadUGyZoSifQ_l1-TTvW4";
 
 let supabaseClient = null;
 
 
-// -------------------------------
-// Load Supabase
-// -------------------------------
+// ==========================================
+// بارگذاری کتابخانه Supabase
+// ==========================================
 
 const supabaseScript = document.createElement("script");
 
 supabaseScript.src =
   "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
-supabaseScript.onload = () => {
+supabaseScript.onload = function () {
 
   supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
 
-  console.log("Supabase connected successfully");
+  console.log("✅ Supabase connected");
 };
 
-supabaseScript.onerror = () => {
-  console.error("Supabase library could not be loaded.");
+supabaseScript.onerror = function () {
+
+  console.error("❌ Supabase library failed to load");
 };
 
 document.head.appendChild(supabaseScript);
 
 
-// -------------------------------
-// Contact Form
-// -------------------------------
+// ==========================================
+// فرم تماس با ما
+// ==========================================
 
 const contactForm = document.getElementById("contactForm");
 
@@ -51,9 +53,13 @@ if (contactForm) {
     const msg = document.getElementById("contactMsg");
 
     if (!supabaseClient) {
-      msg.textContent = "⏳ لطفاً چند لحظه صبر کنید و دوباره تلاش کنید.";
+
+      msg.textContent =
+        "⏳ اتصال به سرور هنوز آماده نیست. چند ثانیه صبر کنید و دوباره امتحان کنید.";
+
       return;
     }
+
 
     const formData = new FormData(contactForm);
 
@@ -61,32 +67,61 @@ if (contactForm) {
     const email = formData.get("email");
     const message = formData.get("message");
 
-    msg.textContent = "⏳ در حال ارسال...";
 
-    const { error } = await supabaseClient
-      .from("Contact")
-      .insert([
-        {
-          name: name,
-          email: email,
-          message: message
-        }
-      ]);
-
-    if (error) {
-
-      console.error(error);
+    if (!name || !message) {
 
       msg.textContent =
-        "❌ ارسال پیام انجام نشد. لطفاً دوباره تلاش کنید.";
+        "⚠️ لطفاً نام و پیام را وارد کنید.";
 
       return;
     }
 
-    msg.textContent =
-      "✅ پیام شما با موفقیت ارسال شد.";
 
-    contactForm.reset();
+    msg.textContent = "⏳ در حال ارسال پیام...";
+
+
+    try {
+
+      const { data, error } = await supabaseClient
+        .from("Contact")
+        .insert([
+          {
+            name: name,
+            email: email || null,
+            message: message
+          }
+        ])
+        .select();
+
+
+      if (error) {
+
+        console.error("Supabase Error:", error);
+
+        msg.textContent =
+          "❌ خطای Supabase: " +
+          error.message;
+
+        return;
+      }
+
+
+      console.log("Message saved:", data);
+
+      msg.textContent =
+        "✅ پیام شما با موفقیت ارسال شد.";
+
+      contactForm.reset();
+
+    } catch (err) {
+
+      console.error("Unexpected Error:", err);
+
+      msg.textContent =
+        "❌ خطای غیرمنتظره: " +
+        err.message;
+    }
 
   });
+
 }
