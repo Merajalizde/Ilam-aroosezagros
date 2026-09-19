@@ -15,14 +15,13 @@
     <b>🌿 ایلام زیبا</b>
 
     <div>
-      <a href="#live">پخش زنده</a>
-      <a href="#tourism">گردشگری</a>
-      <a href="#news">اخبار</a>
-      <a href="#services">خدمات</a>
-      <a href="#survey">نظرسنجی</a>
-      <a href="#contact">تماس با ما</a>
-    </div>
-  </nav>
+  <a href="#live">پخش زنده</a>
+  <a href="#tourism">گردشگری</a>
+  <a href="#news">اخبار</a>
+  <a href="#services">خدمات</a>
+  <a href="#survey">نظرسنجی</a>
+  <a href="#contact">تماس با ما</a>
+</div>
 
   <section class="hero">
     <div>
