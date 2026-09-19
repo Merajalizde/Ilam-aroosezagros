@@ -82,16 +82,15 @@ if (contactForm) {
 
     try {
 
-      const { data, error } = await supabaseClient
-        .from("Contact")
-        .insert([
-          {
-            name: name,
-            email: email || null,
-            message: message
-          }
-        ])
-        .select();
+      const { error } = await supabaseClient
+  .from("Contact")
+  .insert([
+    {
+      name: name,
+      email: email || null,
+      message: message
+    }
+  ]);
 
 
       if (error) {
